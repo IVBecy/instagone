@@ -102,7 +102,7 @@ os.system(ops)
 # Main Loop
 while True:
     n += 1
-    #After every 3rd try, change the IP, so instagram cannot ban it.
+    #After every 5th try, change the IP, so instagram cannot ban it.
     if n % 5 == 0:
         driver.delete_all_cookies()
         print("This IP has been used 5 times")
@@ -154,7 +154,7 @@ while True:
 
     #Navigating to Instagram login page
     driver.get('https://www.instagram.com/accounts/login/')
-    time.sleep(3)
+    time.sleep(5)
     #Finding the username and password boxes
     username = driver.find_element_by_name("username")
     password = driver.find_element_by_name("password")
