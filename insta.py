@@ -81,7 +81,7 @@ PROXY =  "socks5://127.0.0.1:9050"
 #Adding the proxy to chrome
 options = webdriver.ChromeOptions()
 options.add_argument('--proxy-server=%s' % PROXY)
-#options.add_argument('headless')
+options.add_argument('headless')
 options.add_argument('--log-level=3')
 #Setting up the chromedriver
 driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe') # <<<< EDIT this according to your directory
@@ -109,7 +109,7 @@ while True:
         #Adding the proxy to chrome
         options = webdriver.ChromeOptions()
         options.add_argument('--proxy-server=%s' % PROXY)
-        #options.add_argument('headless')
+        options.add_argument('headless')
         options.add_argument('--log-level=3')
         #Setting up the chromedriver
         driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe') # <<<< EDIT this according to your directory
