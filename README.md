@@ -48,7 +48,6 @@ This is a dictionary attack for instagram, using Python.
  
  ```
  # ControlPort 9051
-# HashedControlPassword (Your hashed password will be here)
 # CookieAuthentication 1
  ```
  
