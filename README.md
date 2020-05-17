@@ -55,7 +55,7 @@ This is a dictionary attack for instagram, using Python.
  
  ```tor.exe -f torrc```
  
- **NOTE** In your password file, remove any passwords that are less than 6 characters, as Instagram does not let you to click the button if the password is less than 6 characters.   -- (I'll make it work later).
+ **NOTE**  Any passwords that are less than 6 characters, are getting an extra "1111", to their end, as Instagram, would not let me to press the login button. Also you cannot have a password, that is less than 6 characters....
  
  ***USAGE of the script***
  
