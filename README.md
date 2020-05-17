@@ -22,7 +22,7 @@ This is a dictionary attack for instagram, using Python.
  driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe')
  ```
  
- ^^ Here, change "C:/webdrivers/chromedriver.exe"  to your directory.  Do this twice at **line 87 and 117.**
+ ^^ Here, change "C:/webdrivers/chromedriver.exe"  to your directory.  Do this once at **line 83**
  
  
  
