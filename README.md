@@ -11,21 +11,6 @@ This is a dictionary attack for instagram, using Python.
  
  ```pip install stem  ```
  
- 
- ***You also have to have a chromedriver downloaded for this to work***
- 
- 
- **Before starting the script you will need to edit two lines in the code, which indicates the directory that your chromedriver is in.**
- 
- 
- ```python 
- driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe')
- ```
- 
- ^^ Here, change "C:/webdrivers/chromedriver.exe"  to your directory.  Do this twice at **line 87 and 115**
- 
- 
- 
  **Keep it in mind, that you have to have TOR configured for this.**
  
  **You have to have port 9050 and 9051 opened and used by TOR**
