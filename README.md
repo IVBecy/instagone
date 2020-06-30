@@ -4,6 +4,8 @@
 
 This is a dictionary attack for instagram, using Python.
 
+![Insta prev](https://kristofhracza.com/Pictures/insta.png)
+
 
 ***You will need to install some modules for the scripts to run:***
 
