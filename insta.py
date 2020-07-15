@@ -126,8 +126,10 @@ while True:
     b += 1
     #INFO
     print("\n")
+    print("-----------------------------")
     print("Password:", p)
     print("Try: ", n)
+    print("-----------------------------")
 
 ##########################  Getting Instagram, and filling in the input fields  ##########################
 
