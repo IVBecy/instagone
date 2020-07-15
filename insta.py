@@ -39,6 +39,9 @@ def usage():
 if sys.argv[1] != "-u":
     usage()
 
+if sys.argv[1] == "-h":
+    usage()
+
 uname = sys.argv[2]
 
 
@@ -48,13 +51,6 @@ if sys.argv[3] != "-pl":
 passlist = sys.argv[4]
 
 ips = []
-
-#Detecting OS, for deleting terminal ("clear" for Linux/Mac, "cls" for windows)
-if sys.platform == "win32":
-    ops = "cls"
-else:
-    ops = "clear"
-
 
 #Fucntion for counting all the lines in the text file
 def file_length(fname):
@@ -92,11 +88,9 @@ b = 1
 n = 0
 
 ##### 1st time start up info  ######
-os.system(ops)
-banner()
+print("\n")
 print("Target: {} || Password List: {} || List length: {}".format(uname, passlist, file_length(str(passlist))))
 time.sleep(5)
-os.system(ops)
 # Main Loop
 while True:
     n += 1
@@ -131,12 +125,8 @@ while True:
     a += 1
     b += 1
     #INFO
-    os.system(ops)
     print("\n")
-    print("Target: {} || Password List: {} || List length: {}".format(uname, passlist, file_length(str(passlist))))
-    print("\n")
-    print("\n")
-    print("Trying: ", p)
+    print("Password:", p)
     print("Try: ", n)
 
 ##########################  Getting Instagram, and filling in the input fields  ##########################
