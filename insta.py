@@ -69,7 +69,6 @@ def renew_tor_ip():
 
 count = file_length(str(passlist))
 
-
 ###########  Setting up the driver  ###################
 
 #Assigning TOR proxy
@@ -89,6 +88,7 @@ n = 0
 
 ##### 1st time start up info  ######
 print("\n")
+banner()
 print("Target: {} || Password List: {} || List length: {}".format(uname, passlist, file_length(str(passlist))))
 time.sleep(5)
 # Main Loop
