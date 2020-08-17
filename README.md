@@ -4,7 +4,7 @@
 
 This is a dictionary attack for instagram, using Python.
 
-![Insta prev](https://kristofhracza.com/images/insta.png)
+![Insta prev](images/insta.png)
 
 
 ***You will need to install some modules for the scripts to run:***
