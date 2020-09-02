@@ -4,7 +4,7 @@
 
 This is a dictionary attack for instagram, using Python.
 
-![Insta prev](images/insta.png)
+![Insta prev](insta.png)
 
 
 ***You will need to install some modules for the scripts to run:***
@@ -12,6 +12,10 @@ This is a dictionary attack for instagram, using Python.
  ```pip install selenium ```
  
  ```pip install stem  ```
+ 
+ ```pip install optparse-pretty```
+ 
+ ```pip install beautifulsoup4```
  
  **Keep it in mind, that you have to have TOR configured for this.**
  
@@ -46,9 +50,12 @@ This is a dictionary attack for instagram, using Python.
  
  ***USAGE of the script***
  
- ```py insta.py [-u] [-pl]```
+ ``` 
+ Usage: insta.py [-u] username [-l] passwordlist
 
-```-u : The username of the victim```
-  
-```-pl : The passwordlist to be used```
-
+    REQUIRED:
+        -u or --username: The username of the victim
+        -l or --list: The password list to be used 
+    HELP:
+        -h or --help
+```
