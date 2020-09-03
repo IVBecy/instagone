@@ -144,6 +144,8 @@ class Engine():
       controller.signal(Signal.NEWNYM)
       print("[!] New IP is assigned")
       print("[!] New browser is opened")
+      print("------------------------------")
+      print("\n")
       driver.quit()
       options = webdriver.ChromeOptions()
       options.add_argument(f"--proxy-server={PROXY}")
@@ -193,6 +195,7 @@ class Engine():
         global beginning, end
         beginning -= 1
         end -= 1
+        return None
     #other login possibilities
     for msgs in LoggedInMsgs:
       if msgs in soup:
