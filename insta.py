@@ -173,7 +173,7 @@ class Engine():
     username_field = driver.find_element_by_name("username")
     password_field = driver.find_element_by_name("password")
     username_field.send_keys(uname)
-    if len(p) > 6:
+    if len(p) < 6:
       p + "111111"
       password_field.send_keys(p)
     else:
