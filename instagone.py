@@ -183,9 +183,7 @@ class Engine():
     #other login possibilities
     for msgs in LoggedInMsgs:
       if msgs in soup:
-        for i in range(2):
-          print("\n")
-        print("[+] Password found")
+        print("\n[+] Password found")
         print(f"Password: {self.p}")
         print(f"Username: {self.uname}\n")
         self.driver.quit()
@@ -200,9 +198,7 @@ class Engine():
       print("-"*self.lineMultiplier + "\n")
     # good title
     else:
-      for i in range(2):
-        print("\n")
-      print("[+] Password found")
+      print("\n[+] Password found")
       print(f"Password: {self.p}")
       print(f"Username: {self.uname}\n")
       self.driver.quit()
