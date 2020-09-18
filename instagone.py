@@ -74,7 +74,7 @@ class Engine():
     options = webdriver.ChromeOptions()
     options.add_argument(f"--proxy-server={PROXY}")
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    #options.add_argument("headless")
+    options.add_argument("headless")
     self.driver = webdriver.Chrome(options=options)
     ############# Setting up the options for the terminal ##################
     parser = OptionParser()
@@ -117,7 +117,7 @@ class Engine():
       options = webdriver.ChromeOptions()
       options.add_argument(f"--proxy-server={PROXY}")
       options.add_experimental_option('excludeSwitches', ['enable-logging'])
-      #options.add_argument("headless")
+      options.add_argument("headless")
       self.driver = webdriver.Chrome(options=options)
       print("[!] New browser is opened")
       print("-"*(self.lineMultiplier - 10))
