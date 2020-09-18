@@ -1,6 +1,4 @@
-# Instagram dictionary attack
-
-**NOTE:** For educational puposes only, I do not take credit for any harm, that has been done with this software.
+# Instagone
 
 This is a dictionary attack for instagram, using Python.
 
@@ -51,11 +49,17 @@ This is a dictionary attack for instagram, using Python.
  ***USAGE of the script***
  
  ``` 
- Usage: insta.py [-u] username [-l] passwordlist
+ Usage: instagone.py [-u] username [-l] passwordlist
 
     REQUIRED:
-        -u or --username: The username of the victim
-        -l or --list: The password list to be used 
+        -u or --username: 
+          The username of the victim
+        #######################################
+        -l or --list: 
+          The password list to be used 
+
     HELP:
-        -h or --help
+        -h or --help:
+          Displays this menu
+          
 ```
