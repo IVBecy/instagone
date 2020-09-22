@@ -1,4 +1,2 @@
-selenium
-bs4
 stem
 optparse-pretty

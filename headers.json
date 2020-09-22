@@ -1,0 +1,15 @@
+{
+  "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36",
+  "X-instagram-ajax":"1",
+  "X-Requested-With": "XMLHttpRequest",
+  "Origin": "https://www.instagram.com",
+  "ContentType" : "application/x-www-form-urlencoded",
+  "Connection": "keep-alive",
+  "Accept": "*/*",
+  "Referrer": "https://www.instagram.com/",
+  "authority": "www.instagram.com",
+  "Host" : "www.instagram.com",
+  "Accept-Language" : "en-US;q=0.6,en;q=0.4",
+  "Accept-Encoding" : "gzip, deflate",
+  "x-ig-app-id": "936619743392459"
+}
