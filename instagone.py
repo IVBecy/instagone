@@ -106,14 +106,8 @@ class Engine():
   def loginProcedure(self):
     session = requests.Session()
     session.headers.update(self.headers)
-    try:
-      session.get(self.HOME_URL).cookies.get_dict()['csrftoken']
-    except KeyError:
-      session.headers.update({'X-CSRFToken': "UBhDYWOc7qXMzNPYlrgK0QadlORboNg8"})
+    session.headers.update({'X-CSRFToken': "UBhDYWOc7qXMzNPYlrgK0QadlORboNg8"})
     session.proxies = self.proxies
-    ip_response = json.loads(session.get("http://httpbin.org/ip").text)
-    self.myip = ip_response["origin"]
-    print(self.myip)
     # login
     str_time = str(int(time.time()))
     PASSWORD = '#PWD_INSTAGRAM_BROWSER:0:' + str_time + ':' + self.p
