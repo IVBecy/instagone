@@ -128,7 +128,7 @@ class Engine():
         self.line -= 1
         return None
       elif self.response["message"] == "feedback_required":
-        print("[!] IP banned by Instagram")
+        print("[!] Spam detection has caught the script")
         self.renew_tor_ip()
         self.line -= 1
       #check point
