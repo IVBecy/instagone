@@ -118,7 +118,11 @@ class Engine():
   # Checking responses
   def getError(self):
     #responses from IG
-    self.response = json.loads(self.loginInfo.text)
+    try:
+      self.response = json.loads(self.loginInfo.text)
+    except ValueError:
+      self.line -= 1
+      return None
     #banned IP
     if "message" in self.response:
       if self.response["message"] == "Please wait a few minutes before you try again.":
